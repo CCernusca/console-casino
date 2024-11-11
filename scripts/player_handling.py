@@ -6,25 +6,25 @@ import os
 # Constants
 SAVE_PATH = "C:/ProgramData/ccasino-saves/latest.json"
 START_DATA = {
-    "money": 0
+    "money": 0,
+    "days": 0,
 }
 
 # Variables
-player: dict|None = None
+player: dict = {}
 
 # Functions
-def load_playerstate() -> dict|None:
+def load_playerstate() -> dict:
     """
-    Loads the player's state from a JSON file located at SAVE_PATH.
+    Loads the player's state from a JSON file.
 
     Returns:
-        dict: A dictionary containing the player's state if the file exists.
-        None: If the file does not exist.
+        dict: The player's state as a dictionary. If the file does not exist, returns an empty dictionary.
     """
     try:
         f = open(SAVE_PATH)
     except FileNotFoundError:
-        return None
+        return {}
     data = json.load(f)
     f.close()
     return data
@@ -59,11 +59,21 @@ def init_player():
     """
     global player
     data = load_playerstate()
-    if data is None:
+    if data == {}:
         data = START_DATA
     player = data
 
+def reset_playerstate():
+    """
+    Resets the player's state by deleting the JSON file located at SAVE_PATH.
+
+    Raises:
+        FileNotFoundError: If the file cannot be deleted.
+    """
+    try:
+        os.remove(SAVE_PATH)
+    except FileNotFoundError:
+        pass
+
 if __name__ == "__main__":
-    init_player()
-    print(player)
-    save_playerstate()
+    reset_playerstate()
