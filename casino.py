@@ -3,6 +3,7 @@
 import pyfiglet
 import sys
 import scripts.player_handling as ph
+import scripts.games_manager as gm
 
 # Functions
 def enter_app() -> None:
@@ -165,6 +166,7 @@ def get_actions() -> dict:
         "wait": wait,
         "view self": view_player,
         "get rich": get_rich,
+        "play game": choose_and_play_game,
     }
 
 def leave_casino(time: float, player) -> tuple[float, dict]:
@@ -280,6 +282,51 @@ def get_rich(time: float, player) -> tuple[float, dict]:
     """
     print("You got rich!")
     ph.player["money"] += 1
+
+    return time, player
+
+def choose_and_play_game(time: float, player) -> tuple[float, dict]:
+    """
+    Prompts the player to choose a game from available games.
+
+    This function loads all available games from the `games` directory using
+    `scripts.games_manager.load_games()`, prints a list of the available games,
+    and prompts the player to choose a game by entering a number. The function
+    continuously prompts for input until a valid number is entered. The
+    function then calls the chosen game with the player's state as an argument
+    and returns the current time and the player's state.
+
+    Parameters
+    ----------
+    time : float
+        The current time.
+    player : dict
+        The player's state as a dictionary.
+
+    Returns
+    -------
+    tuple[float, dict]
+        A tuple containing the current time and the player's state.
+    """
+    games = gm.load_games()
+
+    print("Choose a game:")
+    for game in games:
+        print(f"- {game}")
+
+    while True:
+        choice = input("Enter your choice: ").lower()
+
+        if choice in games.keys():
+            break
+
+        print("Invalid input. Please enter the name of a game.")
+
+    game = games[choice]
+
+    print(f"\nPlaying {choice}")
+
+    game(time, player)
 
     return time, player
 
