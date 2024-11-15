@@ -326,7 +326,7 @@ def choose_and_play_game(time: float, player) -> tuple[float, dict]:
 
     print(f"\nPlaying {choice}")
 
-    game(time, player)
+    time, player = game(time, player)
 
     return time, player
 

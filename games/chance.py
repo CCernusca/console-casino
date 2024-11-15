@@ -3,7 +3,7 @@
 import random
 
 # Functions
-def play(time: float, player: dict) -> None:
+def play(time: float, player: dict) -> tuple[float, dict]:
     """
     Plays the game of chance.
 
@@ -29,3 +29,5 @@ def play(time: float, player: dict) -> None:
         print("You lost a coin!")
 
     time += 1
+
+    return time, player
